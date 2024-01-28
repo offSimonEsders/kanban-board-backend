@@ -5,6 +5,8 @@ from rest_framework.response import Response
 
 from .serializers import TodoSerializer
 from .models import Todo
+import json
+
 
 class TodoViewSet(viewsets.ModelViewSet):
     """
@@ -18,3 +20,21 @@ class TodoViewSet(viewsets.ModelViewSet):
         todos = Todo.objects.all()
         serializer = TodoSerializer(todos, many=True)
         return Response(serializer.data)
+
+    def put(self, request, format=None):
+        todossend = json.loads(request.body)
+        for todo in todossend:
+            updateTodo(todo)
+        todos = Todo.objects.all()
+        serializer = TodoSerializer(todos, many=True)
+        return Response({'updated': serializer.data, 'data': todossend})
+
+
+def updateTodo(todosend: dict):
+    todo = Todo.objects.get(id=todosend['id'])
+    todo.title = todosend['title']
+    todo.description = todosend['description']
+    todo.state = todosend['state']
+    todo.index = todosend['index']
+    todo.save()
+    return todo
