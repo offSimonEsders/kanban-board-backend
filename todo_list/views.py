@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from rest_framework import permissions, viewsets, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -18,6 +19,15 @@ class LoginViewSet(APIView):
         user = authenticate(username=username, password=password)
         token, create = Token.objects.get_or_create(user=user)
         return Response({'token': token.key})
+
+class RegisterViewSet(APIView):
+    permission_classes = [permissions.AllowAny]
+    def post(self, request, format=None):
+        data = json.loads(request.body)
+        username = data['username']
+        password = data['password']
+        User.objects.create_user(username=username, password=password)
+        return Response('')
 
 class CheckTokenViewSet(APIView):
     permission_classes = [permissions.IsAuthenticated]
