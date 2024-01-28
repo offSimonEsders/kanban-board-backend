@@ -18,12 +18,14 @@ from django.contrib import admin
 from django.urls import include, path
 from rest_framework import routers
 
-from todo_list.views import TodoViewSet
+from todo_list.views import TodoViewSet, LoginViewSet, CheckTokenViewSet
 
 router = routers.DefaultRouter()
 router.register(r'todos', TodoViewSet)
 
 urlpatterns = [
+    path('login/', LoginViewSet.as_view(), name='login'),
+    path('checkToken/', CheckTokenViewSet.as_view(), name='checkToken'),
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
 ]

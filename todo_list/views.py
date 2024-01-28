@@ -1,12 +1,28 @@
-from django.shortcuts import render
-
-from rest_framework import permissions, viewsets
+from rest_framework import permissions, viewsets, status
 from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.authtoken.models import Token
 
-from .serializers import TodoSerializer
+from django.contrib.auth import authenticate, login
+
+from .serializers import TodoSerializer, UserSerializer
 from .models import Todo
 import json
 
+
+class LoginViewSet(APIView):
+    def post(self, request, format=None):
+        data = json.loads(request.body)
+        username = data['username']
+        password = data['password']
+        user = authenticate(username=username, password=password)
+        token, create = Token.objects.get_or_create(user=user)
+        return Response({'token': token.key})
+
+class CheckTokenViewSet(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    def get(self, request, format=None):
+        return Response('')
 
 class TodoViewSet(viewsets.ModelViewSet):
     """
@@ -14,12 +30,14 @@ class TodoViewSet(viewsets.ModelViewSet):
     """
     queryset = Todo.objects.all().order_by('index')
     serializer_class = TodoSerializer
-    permission_classes = []
+    permission_classes = [permissions.IsAuthenticated]
 
-    def get(self, request, format=None):
+    """
+        def get(self, request, format=None):
         todos = Todo.objects.all()
         serializer = TodoSerializer(todos, many=True)
         return Response(serializer.data)
+    """
 
     def put(self, request, format=None):
         todossend = json.loads(request.body)
@@ -28,6 +46,9 @@ class TodoViewSet(viewsets.ModelViewSet):
         todos = Todo.objects.all()
         serializer = TodoSerializer(todos, many=True)
         return Response({'updated': serializer.data, 'data': todossend})
+
+    def post(self, request, format=None):
+        print(json.loads(request.body))
 
 
 def updateTodo(todosend: dict):
