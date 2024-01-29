@@ -77,6 +77,13 @@ class CreateTodoViewSet(APIView):
         serializer = TodoSerializer(todo, many=False)
         return Response({'created': serializer.data})
 
+class DeleteTodoViewSet(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, format=None):
+        id = json.loads(request.body)
+        Todo.objects.filter(id=id).delete()
+        return Response('')
 
 def updateTodo(todosend: dict):
     todo = Todo.objects.get(id=todosend['id'])
