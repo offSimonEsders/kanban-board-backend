@@ -65,8 +65,17 @@ class TodoViewSet(viewsets.ModelViewSet):
         serializer = TodoSerializer(todos, many=True)
         return Response({'updated': serializer.data, 'data': todossend})
 
+class CreateTodoViewSet(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
     def post(self, request, format=None):
-        print(json.loads(request.body))
+        data = json.loads(request.body)
+        title = data['title']
+        description = data['description']
+        user = request.user
+        todo = Todo.objects.create(title=title, description=description, creator=user)
+        serializer = TodoSerializer(todo, many=False)
+        return Response({'created': serializer.data})
 
 
 def updateTodo(todosend: dict):

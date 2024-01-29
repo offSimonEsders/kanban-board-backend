@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import include, path
 from rest_framework import routers
 
-from todo_list.views import TodoViewSet, LoginViewSet, CheckTokenViewSet, RegisterViewSet, LogoutViewSet
+from todo_list.views import TodoViewSet, LoginViewSet, CheckTokenViewSet, RegisterViewSet, LogoutViewSet, CreateTodoViewSet
 
 router = routers.DefaultRouter()
 router.register(r'todos', TodoViewSet)
@@ -28,6 +28,7 @@ urlpatterns = [
     path('checkToken/', CheckTokenViewSet.as_view(), name='checkToken'),
     path('register/', RegisterViewSet.as_view(), name='register'),
     path('logout/', LogoutViewSet.as_view(), name='logout'),
+    path('createTodo/', CreateTodoViewSet.as_view(), name='createTodo'),
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
 ]
