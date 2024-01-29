@@ -18,7 +18,7 @@ class LoginViewSet(APIView):
         password = data['password']
         user = authenticate(username=username, password=password)
         token, create = Token.objects.get_or_create(user=user)
-        return Response({'token': token.key})
+        return Response({'token': token.key, 'user': UserSerializer(user).data})
 
 class RegisterViewSet(APIView):
     permission_classes = [permissions.AllowAny]
@@ -27,6 +27,14 @@ class RegisterViewSet(APIView):
         username = data['username']
         password = data['password']
         User.objects.create_user(username=username, password=password)
+        return Response('')
+
+class LogoutViewSet(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, format=None):
+        token = json.loads(request.body)
+        Token.objects.filter(key=token).delete()
         return Response('')
 
 class CheckTokenViewSet(APIView):
