@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     'todo_list',
     'rest_framework',
     'corsheaders',
-    'corsheaders.middleware.CorsMiddleware',
 ]
 
 REST_FRAMEWORK = {
