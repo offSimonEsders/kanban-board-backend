@@ -19,7 +19,7 @@ from django.urls import include, path
 from rest_framework import routers
 
 from todo_list.views import TodoViewSet, LoginViewSet, CheckTokenViewSet, RegisterViewSet, LogoutViewSet, \
-    CreateTodoViewSet, DeleteTodoViewSet
+    CreateTodoViewSet, DeleteTodoViewSet, EditSingleTodoViewSet
 
 router = routers.DefaultRouter()
 router.register(r'todos', TodoViewSet)
@@ -31,6 +31,7 @@ urlpatterns = [
     path('logout/', LogoutViewSet.as_view(), name='logout'),
     path('createTodo/', CreateTodoViewSet.as_view(), name='createTodo'),
     path('delete/', DeleteTodoViewSet.as_view(), name='delete'),
+    path('updateTodo/', EditSingleTodoViewSet.as_view(), name='updateTodo'),
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
 ]

@@ -77,6 +77,17 @@ class CreateTodoViewSet(APIView):
         serializer = TodoSerializer(todo, many=False)
         return Response({'created': serializer.data})
 
+class EditSingleTodoViewSet(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def put(self, request):
+        data = json.loads(request.body)
+        todo = Todo.objects.get(id=data['id'])
+        todo.title = data['title']
+        todo.description = data['description']
+        todo.save()
+        return Response('')
+
 class DeleteTodoViewSet(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
